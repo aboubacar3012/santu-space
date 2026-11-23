@@ -2,7 +2,7 @@ import type { Community, Category, Report } from "@/types";
 
 export const community: Community = {
   id: "lycee-conakry",
-  name: "Lycée Exemple de Conakry",
+  name: "Santu Space Network",
   shortName: "LEC",
   description: "Un espace calme et vivant pour partager les cours, s'entraider, célébrer nos réussites et rester informés.",
   city: "Conakry, Guinée",
