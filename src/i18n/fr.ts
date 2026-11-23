@@ -16,7 +16,8 @@ export const fr = {
     admins: "administrateurs",
     settings: "Paramètres",
     explore: "Découvrir la communauté",
-    offline: "Vous êtes hors ligne. Vos données restent disponibles localement.",
+    offline:
+      "Vous êtes hors ligne. Vos données restent disponibles localement.",
   },
   actions: {
     close: "Fermer",
@@ -57,7 +58,8 @@ export const fr = {
     account: "Mon compte",
     identityHint: "Toujours visibles par les membres.",
     contactHint: "Privées par défaut : vous choisissez ce qui est affiché.",
-    subtitle: "Gérez vos informations personnelles et leur visibilité dans la communauté.",
+    subtitle:
+      "Gérez vos informations personnelles et leur visibilité dans la communauté.",
     identity: "Informations personnelles",
     contact: "Coordonnées",
     visibility: "Visibilité",
@@ -74,7 +76,8 @@ export const fr = {
     saveFailed: "Impossible d’enregistrer le profil. Réessayez.",
     saving: "Enregistrement…",
     privacyTitle: "Vous gardez le contrôle",
-    privacyDescription: "Votre prénom et votre nom sont toujours visibles dans la communauté. L’e-mail et le téléphone restent privés, sauf si vous autorisez leur affichage.",
+    privacyDescription:
+      "Votre prénom et votre nom sont toujours visibles dans la communauté. L’e-mail et le téléphone restent privés, sauf si vous autorisez leur affichage.",
     preview: "Aperçu public",
     emailRequired: "Saisissez une adresse e-mail valide.",
     phoneOptional: "Optionnel · indicatif international conseillé",
@@ -141,7 +144,8 @@ export const fr = {
     description: "Notre communauté",
     rules: "Règles de la communauté",
     admins: "Équipe de modération",
-    mission: "Cet espace est conçu pour permettre à chacun d'apprendre à son rythme, de trouver des réponses fiables et de contribuer à une vie scolaire plus solidaire.",
+    mission:
+      "Cet espace est conçu pour permettre à chacun d'apprendre à son rythme, de trouver des réponses fiables et de contribuer à une vie scolaire plus solidaire.",
   },
   settings: {
     title: "Paramètres de la communauté",
@@ -176,7 +180,8 @@ export const fr = {
   },
   report: {
     title: "Signaler cette publication",
-    description: "Expliquez brièvement pourquoi ce contenu devrait être examiné.",
+    description:
+      "Expliquez brièvement pourquoi ce contenu devrait être examiné.",
     reason: "Motif du signalement",
     placeholder: "Contenu inapproprié, spam, information sensible…",
     submit: "Envoyer le signalement",
@@ -196,7 +201,6 @@ export const fr = {
     loadingPosts: "Chargement des publications",
     loadingMembers: "Chargement des membres",
     loadingSidebar: "Chargement des informations de la communauté",
-    darkMode: "Changer le thème",
     remove: "Retirer",
     moveUp: "Monter",
     moveDown: "Descendre",
@@ -206,7 +210,6 @@ export const fr = {
   },
   editorial: {
     feedKicker: "Santu · Communauté",
-    knowledgeQuote: "La connaissance grandit quand elle est partagée.",
   },
 } as const;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Moon, Settings, UserRound } from "lucide-react";
+import { LogOut, Settings, UserRound } from "lucide-react";
 import Link from "next/link";
 import { currentUser } from "@/mocks/members";
 import { Avatar } from "@/components/ui/avatar";
@@ -14,7 +14,6 @@ export function UserMenu() {
         <div className="user-summary"><Avatar member={currentUser} /><span><strong>{currentUser.name}</strong><small>{fr.userMenu.signedInAs}</small></span></div>
         <Link href="/profile"><UserRound size={17} />{fr.userMenu.profile}</Link>
         <Link href="/settings"><Settings size={17} />{fr.userMenu.settings}</Link>
-        <button type="button" onClick={() => document.documentElement.classList.toggle("dark")}><Moon size={17} />{fr.common.darkMode}</button>
         <button type="button" className="danger-text"><LogOut size={17} />{fr.actions.logout}</button>
       </div>
     </details>

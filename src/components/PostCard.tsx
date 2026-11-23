@@ -12,13 +12,14 @@ import { fr } from "@/i18n/fr";
 import { relativeTime } from "@/lib/utils";
 import type { Category, Member, Post } from "@/types";
 
-export function PostCard({ post, author, category, lastCommenter, members, user, onLike, onReport, onRetry, onCommentCountChange }: {
+export function PostCard({ post, author, category, lastCommenter, members, user, openToken, onLike, onReport, onRetry, onCommentCountChange }: {
   post: Post;
   author: Member;
   category: Category;
   lastCommenter?: Member;
   members: Member[];
   user: Member;
+  openToken?: number;
   onLike: () => void;
   onReport: (reason: string) => void;
   onRetry?: () => void;
@@ -26,10 +27,15 @@ export function PostCard({ post, author, category, lastCommenter, members, user,
 }) {
   const [reportOpen, setReportOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [seenToken, setSeenToken] = useState(0);
+  if (openToken && openToken !== seenToken) {
+    setSeenToken(openToken);
+    setCommentsOpen(true);
+  }
   const commentsId = `comments-${post.id}`;
   return (
     <>
-      <Card className={`post-card ${post.pinned ? "is-pinned" : ""}`}>
+      <Card id={`post-${post.id}`} className={`post-card ${post.pinned ? "is-pinned" : ""}`}>
         {post.pinned ? <div className="pin-label"><Pin size={13} fill="currentColor" />{fr.feed.pinnedPost}</div> : null}
         <div className="post-header">
           <Avatar member={author} />
