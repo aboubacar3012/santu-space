@@ -1,8 +1,6 @@
 export const fr = {
   brand: "Santu Space",
   community: {
-    switch: "Changer d'espace",
-    active: "Espace actuel",
     search: "Rechercher dans cet espace…",
     soon: "Bientôt",
     tabs: {
@@ -18,13 +16,6 @@ export const fr = {
     admins: "administrateurs",
     settings: "Paramètres",
     explore: "Découvrir la communauté",
-    globalFeed: "Fil d'actualité global",
-    discoverSpaces: "Découvrir des communautés",
-    createSpace: "Créer une communauté",
-    findSpace: "Rechercher un espace",
-    mySpaces: "Vos espaces",
-    current: "Actuel",
-    noSpaces: "Aucun espace ne correspond à votre recherche.",
     offline: "Vous êtes hors ligne. Vos données restent disponibles localement.",
   },
   actions: {
@@ -162,6 +153,7 @@ export const fr = {
     resolve: "Traiter",
     saved: "Paramètres enregistrés localement.",
     adminOnly: "Cette page est réservée aux administrateurs.",
+    adminArea: "Espace administrateur",
     categoryAdded: "Nouvelle catégorie ajoutée.",
     categoryDeleted: "Catégorie supprimée.",
     reportResolved: "Signalement traité.",

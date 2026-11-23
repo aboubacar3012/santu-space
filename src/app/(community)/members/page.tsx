@@ -7,8 +7,9 @@ import { api } from "@/lib/api";
 import { fr } from "@/i18n/fr";
 import type { Member, MemberRole } from "@/types";
 import { MemberCard } from "@/components/MemberCard";
-import { SkeletonMember } from "@/components/Skeleton";
+import { SkeletonMemberRow } from "@/components/Skeleton";
 import { EmptyState } from "@/components/EmptyState";
+import { Card } from "@/components/ui/card";
 
 export default function MembersPage() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -37,7 +38,7 @@ export default function MembersPage() {
           <option value="member">{fr.members.member}</option>
         </select>
       </div>
-      {error ? <EmptyState title={fr.state.error} /> : loading ? <div className="member-grid" aria-label={fr.common.loadingMembers} aria-busy="true">{Array.from({ length: 8 }, (_, index) => <SkeletonMember key={index} />)}</div> : filtered.length ? <div className="member-grid">{filtered.map((member) => <MemberCard key={member.id} member={member} />)}</div> : <EmptyState title={fr.state.empty} />}
+      {error ? <EmptyState title={fr.state.error} /> : loading ? <Card><ul className="member-list" aria-label={fr.common.loadingMembers} aria-busy="true">{Array.from({ length: 8 }, (_, index) => <SkeletonMemberRow key={index} />)}</ul></Card> : filtered.length ? <Card><ul className="member-list">{filtered.map((member) => <MemberCard key={member.id} member={member} />)}</ul></Card> : <EmptyState title={fr.state.empty} />}
     </section>
   );
 }

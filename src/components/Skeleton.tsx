@@ -12,6 +12,10 @@ export function SkeletonMember() {
   return <div className="card skeleton-card skeleton-member" aria-hidden="true"><i className="skeleton-avatar" /><i className="skeleton-line medium" /><i className="skeleton-line short" /></div>;
 }
 
+export function SkeletonMemberRow() {
+  return <li className="member-row skeleton-member-row" aria-hidden="true"><i className="skeleton-avatar" /><span><i className="skeleton-line medium" /><i className="skeleton-line short" /></span></li>;
+}
+
 export function SkeletonSidebar() {
   return <div className="card skeleton-card skeleton-sidebar" aria-hidden="true"><i className="skeleton-banner" /><i className="skeleton-line title" /><i className="skeleton-line" /><i className="skeleton-line medium" /></div>;
 }

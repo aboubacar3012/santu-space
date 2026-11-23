@@ -18,10 +18,10 @@ export const community: Community = {
 };
 
 export const categories: Category[] = [
-  { id: "general", name: "Général", color: "orange", order: 0 },
+  { id: "general", name: "Général", color: "green", order: 0 },
   { id: "announcements", name: "Annonces", color: "blue", order: 1 },
   { id: "mathematics", name: "Mathématiques", color: "purple", order: 2 },
-  { id: "science", name: "Sciences", color: "green", order: 3 },
+  { id: "science", name: "Sciences", color: "orange", order: 3 },
   { id: "languages", name: "Langues", color: "pink", order: 4 },
   { id: "help", name: "Entraide", color: "yellow", order: 5 },
 ];
@@ -42,8 +42,3 @@ export const reports: Report[] = [
     status: "pending",
   },
 ];
-
-export const relatedSpaces = [
-  { id: "science-club", name: "Club Sciences de Ratoma", detail: "Conakry · Sciences", mark: "CS", color: "orange", current: false, href: "/members" },
-  { id: "study-group", name: "Réussite Bac 2027", detail: "Groupe d'entraide · 84 membres", mark: "RB", color: "purple", current: false, href: "/posts/post-3" },
-] as const;

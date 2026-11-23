@@ -42,7 +42,7 @@ export default function SettingsPage() {
 
   async function addCategory() {
     if (!categoryName.trim()) return;
-    const next = [...categories, { id: `category-${Date.now()}`, name: categoryName.trim(), color: "orange", order: categories.length }];
+    const next = [...categories, { id: `category-${Date.now()}`, name: categoryName.trim(), color: "green", order: categories.length }];
     setCategories(next);
     setCategoryName("");
     await api.saveCategories(next);
@@ -79,7 +79,7 @@ export default function SettingsPage() {
       <div className="standard-page-heading"><div className="page-icon"><ShieldAlert size={23} /></div><div><p className="eyebrow">{fr.brand}</p><h1>{fr.settings.title}</h1><p>{fr.settings.subtitle}</p></div></div>
       {loading ? <SkeletonSidebar /> : <div className="admin-dashboard">
         <aside className="admin-nav card">
-          <div className="admin-nav-brand"><span><Settings2 size={18} /></span><div><strong>{fr.community.settings}</strong><small>{fr.settings.adminOnly.replace("Cette page est ", "").replace(".", "")}</small></div></div>
+          <div className="admin-nav-brand"><span><Settings2 size={18} /></span><div><strong>{fr.community.settings}</strong><small>{fr.settings.adminArea}</small></div></div>
           <nav aria-label={fr.settings.navigation}>
             <a href="#admin-overview" className="active"><LayoutDashboard size={17} />{fr.settings.dashboard}</a>
             <a href="#admin-general"><Settings2 size={17} />{fr.settings.general}</a>

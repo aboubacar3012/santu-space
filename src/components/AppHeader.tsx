@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { api } from "@/lib/api";
 import type { AppNotification } from "@/types";
 import { fr } from "@/i18n/fr";
-import { CommunitySwitcher } from "@/components/CommunitySwitcher";
+import { CommunityBrand } from "@/components/CommunityBrand";
 import { SearchBar } from "@/components/SearchBar";
 import { NotificationBell } from "@/components/NotificationBell";
 import { UserMenu } from "@/components/UserMenu";
@@ -22,7 +22,7 @@ export function AppHeader() {
   return (
     <header className="app-header">
       <div className="header-main">
-        <CommunitySwitcher />
+        <CommunityBrand />
         <SearchBar />
         <div className="header-actions">
           <button type="button" className="icon-button messages-disabled" disabled aria-label={fr.messages}>
