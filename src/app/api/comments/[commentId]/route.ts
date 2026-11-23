@@ -16,8 +16,9 @@ async function authorize(commentId: string) {
 export async function PATCH(request: Request, { params }: { params: Promise<{ commentId: string }> }) {
   try {
     const { commentId } = await params;
-    const { comment, allowed } = await authorize(commentId);
-    if (!allowed) return NextResponse.json({ error: "Modification refusée." }, { status: 403 });
+    const { comment } = await authorize(commentId);
+    const { userId } = await requireMembership((await prisma.post.findUniqueOrThrow({ where: { id: comment.postId }, select: { communityId: true } })).communityId);
+    if (comment.authorId !== userId) return NextResponse.json({ error: "Seul l’auteur peut modifier ce commentaire." }, { status: 403 });
     const { content } = await parseJson(request, commentSchema.pick({ content: true }));
     const updated = await prisma.comment.update({ where: { id: comment.id }, data: { content } });
     return NextResponse.json(updated);

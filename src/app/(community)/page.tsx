@@ -100,7 +100,7 @@ export default function CommunityPage() {
   return (
     <div className="community-page">
       <section className="feed-column">
-        <div className="page-intro"><p className="eyebrow">{fr.editorial.feedKicker}</p><h1>{fr.feed.title}</h1><p>{fr.feed.subtitle}</p></div>
+        <div className="page-intro"><p className="eyebrow">{community?.name ?? fr.brand}</p><h1>{fr.feed.title}</h1><p>{fr.feed.subtitle}</p></div>
         {!loading ? <PostComposer user={currentUser} categories={categories} onPublish={publish} /> : <SkeletonPost />}
         {!loading ? <CategoryChips categories={categories} selected={selected} sort={sort} onSelect={(id) => { setSelected(id); setVisible(pageSize); }} onSort={setSort} /> : null}
         <div className="post-list" aria-label={fr.common.loadingPosts} aria-busy={loading}>
@@ -108,7 +108,7 @@ export default function CommunityPage() {
             const author = members.find((member) => member.id === post.authorId) ?? currentUser;
             const category = categories.find((item) => item.id === post.categoryId) ?? categories[0];
             const lastCommenter = members.find((member) => member.id === post.lastCommenterId);
-            return <PostCard key={post.id} post={post} author={author} category={category} lastCommenter={lastCommenter} onLike={() => { void api.toggleLike(post.id).then(setPosts); }} onReport={() => showToast(fr.report.sent)} onRetry={post.status === "failed" ? () => void retry(post) : undefined} />;
+            return <PostCard key={post.id} post={post} author={author} category={category} lastCommenter={lastCommenter} members={members} user={currentUser} onCommentCountChange={(delta, commenterId) => setPosts((items) => items.map((item) => item.id === post.id ? { ...item, commentCount: Math.max(0, item.commentCount + delta), lastCommenterId: commenterId ?? item.lastCommenterId } : item))} onLike={() => { void api.toggleLike(post.id).then(setPosts); }} onReport={() => showToast(fr.report.sent)} onRetry={post.status === "failed" ? () => void retry(post) : undefined} />;
           }) : <EmptyState title={fr.feed.empty} description={fr.feed.emptyHint} />}
         </div>
         {!loading && filtered.length ? <Pagination visible={Math.min(visible, filtered.length)} total={filtered.length} loading={loadingMore} onLoadMore={() => void loadMore()} /> : null}

@@ -41,7 +41,7 @@ export function PostComposer({ user, categories, onPublish }: { user: Member; ca
             <select aria-label={fr.feed.chooseCategory} value={draft.categoryId} onChange={(event) => setDraft({ ...draft, categoryId: event.target.value })}>
               {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
             </select>
-            <input ref={fileRef} className="sr-only" type="file" accept="image/*,.pdf,.doc,.docx" onChange={(event) => setDraft({ ...draft, attachment: event.target.files?.[0]?.name })} />
+            <input ref={fileRef} className="sr-only" type="file" aria-label={fr.actions.attach} tabIndex={-1} accept="image/*,.pdf,.doc,.docx" onChange={(event) => setDraft({ ...draft, attachment: event.target.files?.[0]?.name })} />
             <Button variant="secondary" onClick={() => fileRef.current?.click()}><ImagePlus size={16} />{draft.attachment ?? fr.actions.attach}</Button>
             <Button type="submit"><Send size={16} />{fr.actions.publish}</Button>
           </div>

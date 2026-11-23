@@ -78,7 +78,8 @@ function CommentEntry({ comment, author, user, compact = false, onReply, onRetry
 } & Omit<CommentActions, "onReply">) {
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState(comment.content);
-  const canManage = comment.authorId === user.id || user.role === "admin" || user.role === "moderator";
+  const isAuthor = comment.authorId === user.id;
+  const canDelete = isAuthor || user.role === "admin" || user.role === "moderator";
   void onReply;
 
   return (
@@ -95,8 +96,8 @@ function CommentEntry({ comment, author, user, compact = false, onReply, onRetry
       <div className="comment-meta">
         <button type="button" onClick={() => void onLike(comment)}><Heart size={compact ? 12 : 13} />{comment.likes}</button>
         {!compact && onReplyClick ? <button type="button" onClick={onReplyClick}><MessageCircle size={13} />{fr.actions.reply}</button> : null}
-        {canManage && !comment.status ? <button type="button" onClick={() => setEditing(true)}><Pencil size={12} />{fr.actions.edit}</button> : null}
-        {canManage && !comment.status ? <button type="button" className="failed-label" onClick={() => void onDelete(comment)}><Trash2 size={12} />{fr.actions.delete}</button> : null}
+        {isAuthor && !comment.status ? <button type="button" onClick={() => setEditing(true)}><Pencil size={12} />{fr.actions.edit}</button> : null}
+        {canDelete && !comment.status ? <button type="button" className="failed-label" onClick={() => void onDelete(comment)}><Trash2 size={12} />{fr.actions.delete}</button> : null}
         {comment.status === "sending" ? <span className="sending-label">{fr.post.sending}</span> : null}
         {comment.status === "failed" ? <button type="button" className="failed-label" onClick={() => void onRetry(comment)}><RotateCcw size={13} />{fr.actions.retry}</button> : null}
       </div>

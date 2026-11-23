@@ -40,6 +40,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ po
     const { post, allowed, membership } = await authorizePost(postId);
     if (!allowed) return NextResponse.json({ error: "Modification refusée." }, { status: 403 });
     const input = await parseJson(request, postUpdateSchema);
+    const { userId } = await requireMembership(post.communityId);
+    const editsContent = input.title !== undefined || input.content !== undefined || input.categoryId !== undefined || input.attachmentUrl !== undefined;
+    if (editsContent && post.authorId !== userId) {
+      return NextResponse.json({ error: "Seul l’auteur peut modifier cette publication." }, { status: 403 });
+    }
     if (input.pinned !== undefined && membership.role !== MembershipRole.ADMIN && membership.role !== MembershipRole.MODERATOR) {
       return NextResponse.json({ error: "Épinglage réservé à l’équipe de modération." }, { status: 403 });
     }

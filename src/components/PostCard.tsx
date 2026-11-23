@@ -7,20 +7,26 @@ import { Avatar } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { ReactionButton } from "@/components/ReactionButton";
 import { ReportDialog } from "@/components/ReportDialog";
+import { CommentsSection } from "@/components/CommentsSection";
 import { fr } from "@/i18n/fr";
 import { relativeTime } from "@/lib/utils";
 import type { Category, Member, Post } from "@/types";
 
-export function PostCard({ post, author, category, lastCommenter, onLike, onReport, onRetry }: {
+export function PostCard({ post, author, category, lastCommenter, members, user, onLike, onReport, onRetry, onCommentCountChange }: {
   post: Post;
   author: Member;
   category: Category;
   lastCommenter?: Member;
+  members: Member[];
+  user: Member;
   onLike: () => void;
   onReport: (reason: string) => void;
   onRetry?: () => void;
+  onCommentCountChange: (delta: number, lastCommenterId?: string) => void;
 }) {
   const [reportOpen, setReportOpen] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const commentsId = `comments-${post.id}`;
   return (
     <>
       <Card className={`post-card ${post.pinned ? "is-pinned" : ""}`}>
@@ -46,9 +52,10 @@ export function PostCard({ post, author, category, lastCommenter, onLike, onRepo
         ) : null}
         <div className="post-footer">
           <ReactionButton count={post.likes} active={post.liked} onClick={onLike} />
-          <Link href={`/posts/${post.id}#comments`} className="comment-button"><MessageCircle size={17} />{post.commentCount} <span>{fr.feed.comments}</span></Link>
+          <button type="button" className={`comment-button ${commentsOpen ? "active" : ""}`} disabled={Boolean(post.status)} aria-expanded={commentsOpen} aria-controls={commentsId} onClick={() => setCommentsOpen((open) => !open)}><MessageCircle size={17} />{post.commentCount} <span>{fr.feed.comments}</span></button>
           {lastCommenter ? <span className="last-commenter">{fr.feed.lastReply} <strong>{lastCommenter.name}</strong><Avatar member={lastCommenter} size="sm" /></span> : null}
         </div>
+        {commentsOpen ? <div id={commentsId}><CommentsSection postId={post.id} members={members} user={user} variant="inline" onCountChange={onCommentCountChange} /></div> : null}
       </Card>
       <ReportDialog open={reportOpen} onClose={() => setReportOpen(false)} onSubmit={onReport} />
     </>

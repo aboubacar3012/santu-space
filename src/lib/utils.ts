@@ -1,15 +1,18 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { fr } from "@/i18n/fr";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function relativeTime(value: string) {
-  const days = Math.max(0, Math.round((Date.now() - new Date(value).getTime()) / 86_400_000));
-  if (days === 0) return "aujourd'hui";
-  if (days === 1) return "il y a 1 j";
-  return `il y a ${days} j`;
+  const minutes = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 60_000));
+  if (minutes < 1) return fr.time.now;
+  if (minutes < 60) return `${fr.time.ago} ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${fr.time.ago} ${hours} h`;
+  return `${fr.time.ago} ${Math.floor(hours / 24)} j`;
 }
 
 export function formatDate(value: string) {

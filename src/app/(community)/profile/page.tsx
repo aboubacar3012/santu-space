@@ -87,14 +87,14 @@ export default function ProfilePage() {
     <section className="profile-page">
       <div className="standard-page-heading">
         <div className="page-icon"><UserRound size={23} /></div>
-        <div><p className="eyebrow">{fr.userMenu.signedInAs}</p><h1>{fr.profile.title}</h1><p>{fr.profile.subtitle}</p></div>
+        <div><p className="eyebrow">{fr.profile.account}</p><h1>{fr.profile.title}</h1><p>{fr.profile.subtitle}</p></div>
       </div>
 
       <div className="profile-grid">
         <div className="profile-main">
           <form onSubmit={save}>
             <Card className="profile-card linkup-card">
-              <div className="profile-form-heading"><span className="profile-form-icon"><UserRound size={18} /></span><div><h2>{fr.profile.identity}</h2><p>{profile.role === "admin" ? fr.members.admin : fr.members.member}</p></div></div>
+              <div className="profile-form-heading"><span className="profile-form-icon"><UserRound size={18} /></span><div><h2>{fr.profile.identity}</h2><p>{fr.profile.identityHint}</p></div></div>
               <div className="profile-fields two-columns">
                 <label>{fr.profile.firstName}<input required autoComplete="given-name" value={form.firstName} onChange={(event) => update("firstName", event.target.value)} /></label>
                 <label>{fr.profile.lastName}<input required autoComplete="family-name" value={form.lastName} onChange={(event) => update("lastName", event.target.value)} /></label>
@@ -102,7 +102,7 @@ export default function ProfilePage() {
             </Card>
 
             <Card className="profile-card linkup-card">
-              <div className="profile-form-heading"><span className="profile-form-icon"><Mail size={18} /></span><div><h2>{fr.profile.contact}</h2><p>{fr.profile.visibility}</p></div></div>
+              <div className="profile-form-heading"><span className="profile-form-icon"><Mail size={18} /></span><div><h2>{fr.profile.contact}</h2><p>{fr.profile.contactHint}</p></div></div>
               <div className="profile-fields">
                 <div className="profile-contact-field">
                   <label>{fr.profile.email}<input required type="email" autoComplete="email" value={form.email ?? ""} onChange={(event) => update("email", event.target.value)} aria-describedby="email-visibility-status" /></label>
