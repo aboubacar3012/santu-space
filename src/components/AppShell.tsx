@@ -22,7 +22,12 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <ToastProvider>
-      {!online ? <div className="offline-banner" role="status"><WifiOff size={16} />{fr.community.offline}</div> : null}
+      {!online ? (
+        <div className="offline-banner" role="status">
+          <WifiOff size={16} />
+          {fr.community.offline}
+        </div>
+      ) : null}
       <AppHeader />
       <main className="page-shell">{children}</main>
     </ToastProvider>

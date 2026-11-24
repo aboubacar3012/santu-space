@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { fr } from "@/i18n/fr";
 import type { Member } from "@/types";
 
-export function CommentForm({ user, compact = false, placeholder = fr.post.replyPlaceholder, onSubmit, onCancel }: {
+export function CommentForm({
+  user,
+  compact = false,
+  placeholder = fr.post.replyPlaceholder,
+  onSubmit,
+  onCancel,
+}: {
   user: Member;
   compact?: boolean;
   placeholder?: string;
@@ -34,10 +40,26 @@ export function CommentForm({ user, compact = false, placeholder = fr.post.reply
     <form className={`comment-form ${compact ? "compact" : ""}`} onSubmit={submit}>
       <Avatar member={user} size={compact ? "sm" : "md"} />
       <div>
-        <textarea required autoFocus={compact} rows={compact ? 2 : 3} value={content} onChange={(event) => setContent(event.target.value)} placeholder={placeholder} disabled={sending} aria-label={fr.post.replyPlaceholder} />
+        <textarea
+          required
+          autoFocus={compact}
+          rows={compact ? 2 : 3}
+          value={content}
+          onChange={(event) => setContent(event.target.value)}
+          placeholder={placeholder}
+          disabled={sending}
+          aria-label={fr.post.replyPlaceholder}
+        />
         <div className="comment-form-actions">
-          {onCancel ? <Button variant="ghost" size="sm" onClick={onCancel}>{fr.actions.cancel}</Button> : null}
-          <Button size="sm" type="submit" disabled={sending || !content.trim()}><Send size={14} />{sending ? fr.post.sending : fr.actions.send}</Button>
+          {onCancel ? (
+            <Button variant="ghost" size="sm" onClick={onCancel}>
+              {fr.actions.cancel}
+            </Button>
+          ) : null}
+          <Button size="sm" type="submit" disabled={sending || !content.trim()}>
+            <Send size={14} />
+            {sending ? fr.post.sending : fr.actions.send}
+          </Button>
         </div>
       </div>
     </form>

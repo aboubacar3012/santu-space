@@ -21,10 +21,22 @@ export function CategoryChips({
   return (
     <div className="filter-bar">
       <div className="category-chips">
-        <button type="button" className={cn("category-chip", selected === "all" && "selected")} onClick={() => onSelect("all")}>{fr.feed.all}</button>
+        <button
+          type="button"
+          className={cn("category-chip", selected === "all" && "selected")}
+          onClick={() => onSelect("all")}
+        >
+          {fr.feed.all}
+        </button>
         {categories.map((category) => (
-          <button key={category.id} type="button" className={cn("category-chip", selected === category.id && "selected")} onClick={() => onSelect(category.id)}>
-            <i className={`category-dot category-${category.color}`} />{category.name}
+          <button
+            key={category.id}
+            type="button"
+            className={cn("category-chip", selected === category.id && "selected")}
+            onClick={() => onSelect(category.id)}
+          >
+            <i className={`category-dot category-${category.color}`} />
+            {category.name}
           </button>
         ))}
       </div>

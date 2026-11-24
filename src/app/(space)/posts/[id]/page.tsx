@@ -7,6 +7,20 @@ async function PostRoute({ params }: { params: Promise<{ id: string }> }) {
   return <PostDetail postId={id} />;
 }
 
-export default function PostPage({ params }: { params: Promise<{ id: string }> }) {
-  return <Suspense fallback={<div className="detail-page"><SkeletonPost /></div>}><PostRoute params={params} /></Suspense>;
+export default function PostPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="detail-page">
+          <SkeletonPost />
+        </div>
+      }
+    >
+      <PostRoute params={params} />
+    </Suspense>
+  );
 }

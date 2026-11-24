@@ -13,15 +13,29 @@ export function MemberCard({ member }: { member: Member }) {
       <Avatar member={member} size="md" />
       <div className="member-row-main">
         <strong>{member.name}</strong>
-        <small>{fr.members.joined} {formatDate(member.joinedAt)}</small>
+        <small>
+          {fr.members.joined} {formatDate(member.joinedAt)}
+        </small>
         {email || phone ? (
           <span className="member-row-contact">
-            {email ? <span><Mail size={12} aria-hidden="true" />{email}</span> : null}
-            {phone ? <span><Phone size={12} aria-hidden="true" />{phone}</span> : null}
+            {email ? (
+              <span>
+                <Mail size={12} aria-hidden="true" />
+                {email}
+              </span>
+            ) : null}
+            {phone ? (
+              <span>
+                <Phone size={12} aria-hidden="true" />
+                {phone}
+              </span>
+            ) : null}
           </span>
         ) : null}
       </div>
-      {member.role !== "member" ? <span className={`role-badge role-${member.role}`}>{fr.members[member.role]}</span> : null}
+      {member.role !== "member" ? (
+        <span className={`role-badge role-${member.role}`}>{fr.members[member.role]}</span>
+      ) : null}
     </li>
   );
 }

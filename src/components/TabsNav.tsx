@@ -7,9 +7,24 @@ import { fr } from "@/i18n/fr";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: fr.community.tabs.community, icon: Home, active: (path: string) => path === "/" || path.startsWith("/posts") },
-  { href: "/members", label: fr.community.tabs.members, icon: Users, active: (path: string) => path === "/members" },
-  { href: "/about", label: fr.community.tabs.about, icon: Info, active: (path: string) => path === "/about" },
+  {
+    href: "/",
+    label: fr.community.tabs.community,
+    icon: Home,
+    active: (path: string) => path === "/" || path.startsWith("/posts"),
+  },
+  {
+    href: "/members",
+    label: fr.community.tabs.members,
+    icon: Users,
+    active: (path: string) => path === "/members",
+  },
+  {
+    href: "/about",
+    label: fr.community.tabs.about,
+    icon: Info,
+    active: (path: string) => path === "/about",
+  },
 ];
 
 const disabled = [
@@ -23,12 +38,22 @@ export function TabsNav() {
   return (
     <nav className="tabs-nav" aria-label={fr.common.navigation}>
       {links.map(({ href, label, icon: Icon, active }) => (
-        <Link key={href} href={href} className={cn("tab-item", active(pathname) && "active")} aria-current={active(pathname) ? "page" : undefined}>
-          <Icon size={17} />{label}
+        <Link
+          key={href}
+          href={href}
+          className={cn("tab-item", active(pathname) && "active")}
+          aria-current={active(pathname) ? "page" : undefined}
+        >
+          <Icon size={17} />
+          {label}
         </Link>
       ))}
       {disabled.map(({ label, icon: Icon }) => (
-        <span key={label} className="tab-item tab-disabled" aria-disabled="true"><Icon size={17} />{label}<small>{fr.community.soon}</small></span>
+        <span key={label} className="tab-item tab-disabled" aria-disabled="true">
+          <Icon size={17} />
+          {label}
+          <small>{fr.community.soon}</small>
+        </span>
       ))}
     </nav>
   );
