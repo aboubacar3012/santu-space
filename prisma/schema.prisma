@@ -25,6 +25,21 @@ enum ReportStatus {
   DISMISSED
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+/// Suit le transcodage MediaConvert de la vidéo d'une leçon.
+enum VideoStatus {
+  PENDING
+  PROCESSING
+  READY
+  ERROR
+}
+
 model User {
   id          String   @id @default(uuid())
   firstName   String
@@ -49,6 +64,12 @@ model User {
   notifications     Notification[] @relation("NotificationRecipient")
   notificationActs  Notification[] @relation("NotificationActor")
 
+  classesCreated      Classe[]
+  classeMemberships   ClasseMember[]
+  invitationsSent     ClasseInvitation[]
+  modulesCreated      Module[]
+  classeModulesAdded  ClasseModule[]
+
   @@map("users")
 }
 
@@ -62,11 +83,13 @@ model Community {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  memberships  Membership[]
-  categories   Category[]
-  posts        Post[]
-  reports      Report[]
+  memberships   Membership[]
+  categories    Category[]
+  posts         Post[]
+  reports       Report[]
   notifications Notification[]
+  classes       Classe[]
+  modules       Module[]
 
   @@map("communities")
 }
@@ -137,10 +160,10 @@ model Comment {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  post     Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
-  author   User         @relation(fields: [authorId], references: [id], onDelete: Restrict)
-  parent   Comment?     @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies  Comment[]    @relation("CommentReplies")
+  post     Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author   User          @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  parent   Comment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Comment[]     @relation("CommentReplies")
   likes    CommentLike[]
 
   @@index([postId, createdAt])
@@ -175,20 +198,20 @@ model CommentLike {
 }
 
 model Report {
-  id          String       @id @default(uuid())
-  communityId String       @map("community_id")
-  postId      String       @map("post_id")
-  reporterId  String       @map("reporter_id")
-  reason      String
-  status      ReportStatus @default(PENDING)
-  reviewedById String?     @map("reviewed_by_id")
-  createdAt   DateTime     @default(now()) @map("created_at")
-  reviewedAt  DateTime?    @map("reviewed_at")
+  id           String       @id @default(uuid())
+  communityId  String       @map("community_id")
+  postId       String       @map("post_id")
+  reporterId   String       @map("reporter_id")
+  reason       String
+  status       ReportStatus @default(PENDING)
+  reviewedById String?      @map("reviewed_by_id")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  reviewedAt   DateTime?    @map("reviewed_at")
 
-  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  reporter  User      @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Restrict)
-  reviewedBy User?    @relation("ReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+  community  Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  post       Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reporter   User      @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Restrict)
+  reviewedBy User?     @relation("ReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
 
   @@index([communityId, status, createdAt])
   @@map("reports")
@@ -212,4 +235,142 @@ model Notification {
 
   @@index([recipientId, read, createdAt(sort: Desc)])
   @@map("notifications")
+}
+
+// ---------------------------------------------------------------------------
+//  CLASSES
+// ---------------------------------------------------------------------------
+
+/// Salle de classe créée par un admin. Ses inscrits sont dans ClasseMember,
+/// ses modules dans ClasseModule.
+model Classe {
+  id          String   @id @default(uuid())
+  communityId String   @map("community_id")
+  createdById String   @map("created_by_id")
+  name        String
+  description String?
+  coverUrl    String?  @map("cover_url")
+  isArchived  Boolean  @default(false) @map("is_archived")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  community   Community          @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  createdBy   User               @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  members     ClasseMember[]
+  invitations ClasseInvitation[]
+  modules     ClasseModule[]
+
+  @@unique([communityId, name])
+  @@index([communityId, isArchived])
+  @@map("classes")
+}
+
+/// Inscrit d'une classe : ajouté directement (déjà sur la plateforme)
+/// ou via une invitation acceptée.
+model ClasseMember {
+  id           String   @id @default(uuid())
+  classeId     String   @map("classe_id")
+  userId       String   @map("user_id")
+  invitationId String?  @unique @map("invitation_id")
+  joinedAt     DateTime @default(now()) @map("joined_at")
+
+  classe     Classe            @relation(fields: [classeId], references: [id], onDelete: Cascade)
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invitation ClasseInvitation? @relation(fields: [invitationId], references: [id], onDelete: SetNull)
+
+  @@unique([classeId, userId])
+  @@index([userId])
+  @@map("classe_members")
+}
+
+/// Invitation par email. À l'acceptation (en une transaction) : création du
+/// User, du ClasseMember et, si besoin, du Membership de la communauté.
+model ClasseInvitation {
+  id          String           @id @default(uuid())
+  classeId    String           @map("classe_id")
+  invitedById String           @map("invited_by_id")
+  email       String
+  /// Jeton aléatoire placé dans le lien envoyé par email.
+  token       String           @unique
+  status      InvitationStatus @default(PENDING)
+  expiresAt   DateTime         @map("expires_at")
+  acceptedAt  DateTime?        @map("accepted_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  classe    Classe        @relation(fields: [classeId], references: [id], onDelete: Cascade)
+  invitedBy User          @relation(fields: [invitedById], references: [id], onDelete: Restrict)
+  member    ClasseMember?
+
+  // Pour ré-inviter un email : mettre à jour la ligne (nouveau token et expiration)
+  @@unique([classeId, email])
+  @@index([email])
+  @@index([classeId, status])
+  @@map("classe_invitations")
+}
+
+// ---------------------------------------------------------------------------
+//  COURS (modules réservés aux admins : contrôle fait côté API)
+// ---------------------------------------------------------------------------
+
+/// Module indépendant : il existe dans la bibliothèque de la communauté,
+/// puis l'admin l'ajoute à une ou plusieurs classes via ClasseModule.
+model Module {
+  id          String   @id @default(uuid())
+  communityId String   @map("community_id")
+  createdById String   @map("created_by_id")
+  title       String
+  description String?
+  coverUrl    String?  @map("cover_url")
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  community Community      @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  createdBy User           @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  lessons   Lesson[]
+  classes   ClasseModule[]
+
+  @@index([communityId, published])
+  @@map("modules")
+}
+
+/// Lien entre une classe et un module, avec l'ordre d'affichage.
+model ClasseModule {
+  id        String   @id @default(uuid())
+  classeId  String   @map("classe_id")
+  moduleId  String   @map("module_id")
+  addedById String   @map("added_by_id")
+  order     Int      @default(0)
+  addedAt   DateTime @default(now()) @map("added_at")
+
+  classe  Classe @relation(fields: [classeId], references: [id], onDelete: Cascade)
+  module  Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  addedBy User   @relation(fields: [addedById], references: [id], onDelete: Restrict)
+
+  @@unique([classeId, moduleId])
+  @@index([classeId, order])
+  @@index([moduleId])
+  @@map("classe_modules")
+}
+
+/// Leçon d'un module, avec sa vidéo transcodée en HLS.
+model Lesson {
+  id             String      @id @default(uuid())
+  moduleId       String      @map("module_id")
+  title          String
+  description    String?
+  order          Int         @default(0)
+  /// Clé S3 de la vidéo source.
+  videoKey       String?     @map("video_key")
+  /// Clé S3 du manifeste HLS (ex : courses/42/lesson-7/index.m3u8).
+  hlsManifestKey String?     @map("hls_manifest_key")
+  videoStatus    VideoStatus @default(PENDING) @map("video_status")
+  durationSec    Int?        @map("duration_sec")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([moduleId, order])
+  @@map("lessons")
 }
